@@ -1,0 +1,223 @@
+@font-face {
+  font-family: "Malgun Gothic";
+  src: local("Malgun Gothic");
+  font-weight: normal;
+  font-style: normal;
+}
+@mixin edit-template {
+  .edit_area {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding: 0 8px 2px 8px;
+    overflow: hidden;
+    .board-edit {
+      width: 100%;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 1px 0 $rgbaAlpah;
+      border: 0;
+      outline: 0;
+      text-indent: 5px;
+    }
+    .edit_btn_wrap {
+      display: flex;
+      align-items: center;
+      .add_btn {
+        width: 90px;
+        height: 30px;
+        background: #1555c4;
+        border-radius: 5px;
+        outline: 0;
+        border: 0;
+        color: #fff;
+        margin: 10px 0 5px 0;
+        cursor: pointer;
+      }
+
+      .close_btn {
+        display: flex;
+        width: 30px;
+        height: 30px;
+        justify-content: center;
+        align-items: center;
+        outline: 0;
+        border: 0;
+        margin-left: 5px;
+        cursor: pointer;
+
+        .fa-xmark {
+          position: relative;
+          top: 3.5px;
+          font-size: 20px;
+          font-weight: normal;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+}
+
+$rgba: rgb(9, 30, 66);
+$alpha: 0.25;
+
+$rgbaAlpah: rgba($rgba, $alpha);
+
+.App {
+  height: 120vh;
+  background: url(../public/photo-1548222606-6c4f581fd09d.jpg);
+  background-position: center 35%;
+}
+
+header {
+  background: #111;
+  height: 45px;
+  opacity: 0.7;
+  margin-bottom: 15px;
+  text-align: center;
+  line-height: 45px;
+  color: #fff;
+}
+
+.board_wrap {
+  display: flex;
+  height: 100vh;
+  padding: 0 15px;
+  box-sizing: border-box;
+  .list {
+    display: flex;
+    align-self: flex-start;
+    width: 272px;
+    height: auto;
+    flex-direction: column;
+    background: #ebecf0;
+    border-radius: 3px;
+    margin: 0 5px;
+
+    .list-header {
+      width: 100%;
+      height: 40px;
+      padding: 10px 8px;
+      box-sizing: border-box;
+
+      .title-area {
+        background: transparent;
+        border-radius: 5px;
+        box-shadow: none;
+        font-weight: 600;
+        height: 20px;
+        margin: -4px 0;
+        max-height: 256px;
+        min-height: 20px;
+        padding: 4px 8px;
+        border: 0;
+        resize: none;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .title-area:focus {
+        background: #fff;
+        outline-color: #1555c4;
+      }
+    }
+
+    .list-body {
+      display: flex;
+      align-items: center;
+      color: #172b4d;
+      font-size: 14px;
+      padding: 4px 8px 6px 8px;
+      flex-direction: column;
+      @include edit-template();
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        overflow: hidden;
+        background: #fff;
+        padding: 10px;
+        cursor: pointer;
+
+        box-sizing: border-box;
+
+        .icon_wrap {
+          align-self: flex-start;
+          margin-top: 10px;
+        }
+
+        .fa-list {
+          margin-right: 12px;
+        }
+      }
+
+      .board-add {
+        width: 100%;
+        padding: 6px 8px;
+        cursor: pointer;
+        border-radius: 3px;
+        box-sizing: border-box;
+
+        .fa-1x {
+          margin-right: 10px;
+          color: #6b778c;
+        }
+      }
+
+      .board-add:hover {
+        background-color: rgba(9, 30, 66, 0.08);
+        color: #172b4d;
+      }
+    }
+  }
+
+  .another-list {
+    display: flex;
+    width: 272px;
+    height: 100vh;
+    color: #fff;
+    margin: 0 5px;
+    order: 10000;
+
+    @include edit-template();
+
+    .edit_area {
+      background: #ebecf0;
+      border-radius: 3px;
+      align-self: flex-start;
+      padding-top: 15px;
+    }
+
+    .another-add {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+      height: 45px;
+      background: #ebecf0;
+      opacity: 0.8;
+      font-weight: 600;
+      font-size: 15px;
+      border: 0;
+      outline: 0;
+      border-radius: 5px;
+      color: #222;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      cursor: pointer;
+
+      .fa-1x {
+        margin-right: 10px;
+        color: #6b778c;
+        position: relative;
+        top: 2px;
+      }
+    }
+
+    .another-add:hover {
+      background: #fff;
+      opacity: 0.8;
+    }
+  }
+}

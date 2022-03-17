@@ -1,0 +1,19 @@
+diff a/src/App.js b/src/App.js	(rejected hunks)
+@@ -37,17 +37,6 @@
+     setTimeout(() => {
+       setLoading(true);
+     }, 400);
+-    list.map(function (value, index) {
+-      db.collection("title")
+-        .doc(list[index].id)
+-        .collection("article")
+-        .onSnapshot((snapshot) => {
+-          snapshot.docs.map((doc) => {
+-            data.push(doc.data());
+-            setArticle(data);
+-          });
+-        });
+-    });
+   }, [list]);
+ 
+   return (

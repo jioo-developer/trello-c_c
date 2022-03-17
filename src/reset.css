@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Malgun Gothic";
+  word-break: keep-all;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+img {
+  display: block;
+  float: left;
+}
+
+a {
+  text-decoration: none;
+  color: #333333;
+}
+
+#wrap {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1920px;
+  overflow: hidden;
+  position: relative;
+}
+
+header,
+section,
+footer {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.in_wrap {
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* input[type="checkbox"] {
+  display: none;
+} */

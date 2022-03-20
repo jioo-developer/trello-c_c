@@ -12,9 +12,11 @@ function Edit(props) {
   let stateSelector = useSelector((state) => state.EditToggle);
   let dispatch = useDispatch();
   const indexId = props.id;
+
   async function TitlePost() {
     const Titlecontent = {
       title: newTitle,
+      order : props.list.length +1
     };
     try {
       await db
@@ -32,6 +34,7 @@ function Edit(props) {
   async function TextPost() {
     const Textcontent = {
       text: text,
+      fromId :indexId
     };
 
     try {

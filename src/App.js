@@ -11,7 +11,7 @@ import { Route, Routes } from "react-router-dom";
 import { db } from "./Firebase";
 function App() {
   let order;
-  let data = [];
+  let object = {}
   let [list, SetList] = useState([]);
   let [loading, setLoading] = useState(false);
   let [articleItem, setArticle] = useState([]);
@@ -36,17 +36,15 @@ function App() {
     setTimeout(() => {
       setLoading(true);
     }, 400);
-    list.map(function (value, index) {
-      db.collection("title")
-        .doc(list[index].id)
-        .collection("article")
-        .onSnapshot((snapshot) => {
-          snapshot.docs.map((doc) => {
-            data.push(doc.data());
-            setArticle(data);
-          });
-        });
-    });
+
+    for(var i=0; i<list.length; i++){
+      let filterId = list[i].id
+      db.collection("title").doc(list[i].id).collection("article").onSnapshot((snapshot)=>{
+        snapshot.docs.map((doc)=>{
+          console.log(doc.data())
+        })
+      })
+    }
   }, [list]);
 
   return (
@@ -62,7 +60,6 @@ function App() {
                   <article
                     className="list"
                     key={index}
-                    aria-label={order}
                     style={
                       (order = {
                         order: list[index].order,
@@ -82,7 +79,7 @@ function App() {
                           Lorem Ipsum is simply dummy text of the printing and
                           typesetting industry. Lorem Ipsum has been the
                           industry's standard dummy text ever since the 1500s,
-                          when an unknown
+                          when an end
                         </p>
                         <div className="icon_wrap">
                           <FontAwesomeIcon icon={faList} size="1x" />
@@ -93,7 +90,7 @@ function App() {
                     <div className="list-body">
                       {stateSelector[0].addCards === true ? (
                         index === stateSelector[0].btnIndex ? (
-                          <Edit id={list[index].id} />
+                          <Edit id={list[index].id} list={list}/>
                         ) : (
                           <Add index={index} />
                         )
@@ -108,7 +105,7 @@ function App() {
                 <>
                   <article className="another-list">
                     {stateSelector[0].addLists === true ? (
-                      <Edit />
+                      <Edit list={list}/>
                     ) : (
                       <>
                         <button

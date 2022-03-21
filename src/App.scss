@@ -95,10 +95,12 @@ header {
     margin: 0 5px;
 
     .list-header {
+      display: flex;
       width: 100%;
-      height: 40px;
       padding: 10px 8px;
       box-sizing: border-box;
+      justify-content: space-between;
+      align-items: center;
 
       .title-area {
         background: transparent;
@@ -120,6 +122,17 @@ header {
         background: #fff;
         outline-color: #1555c4;
       }
+
+      button {
+        border: 0;
+        outline: 0;
+        font-size: 12px;
+        border-radius: 5px;
+        padding: 3px 5px;
+        box-sizing: border-box;
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
 
     .list-body {
@@ -138,9 +151,10 @@ header {
         overflow: hidden;
         background: #fff;
         padding: 10px;
-        cursor: pointer;
-
+        margin-bottom: 15px;
         box-sizing: border-box;
+        border-radius: 5px;
+        position: relative;
 
         .icon_wrap {
           align-self: flex-start;
@@ -149,12 +163,34 @@ header {
 
         .fa-list {
           margin-right: 12px;
+          cursor: pointer;
         }
+
+        .fa-pencil {
+          position: absolute;
+          top: 12px;
+          right: 15px;
+          font-size: 0.8em;
+          display: none;
+        }
+      }
+
+      .card:hover {
+        background: #f4f5f7;
+        cursor: pointer;
+      }
+
+      .card:hover .fa-pencil {
+        display: block;
+      }
+
+      .card:last-child {
+        margin-bottom: 0;
       }
 
       .board-add {
         width: 100%;
-        padding: 6px 8px;
+        padding: 10px 8px;
         cursor: pointer;
         border-radius: 3px;
         box-sizing: border-box;
@@ -196,7 +232,7 @@ header {
       width: 100%;
       height: 45px;
       background: #ebecf0;
-      opacity: 0.8;
+      opacity: 0.65;
       font-weight: 600;
       font-size: 15px;
       border: 0;

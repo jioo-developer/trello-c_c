@@ -15,6 +15,12 @@ let defaultData = [
   },
 ];
 
+let update = [
+  {
+    titleIndex: 0,
+  },
+];
+
 function EditToggle(state = defaultData, action) {
   if (action.type === "에디터열기") {
     let open = [...defaultData];
@@ -40,7 +46,18 @@ function EditToggle(state = defaultData, action) {
   }
 }
 
-let store = createStore(combineReducers({ EditToggle }));
+function TitleUpdate(state = update, action) {
+  if (action.type === "타이틀수정버튼") {
+    let open = [...update];
+    open[0].titleIndex = Number(action.payload);
+    console.log(open);
+    return open;
+  } else {
+    return state;
+  }
+}
+
+let store = createStore(combineReducers({ EditToggle, TitleUpdate }));
 
 ReactDOM.render(
   <React.StrictMode>

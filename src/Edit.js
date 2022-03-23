@@ -16,7 +16,6 @@ function Edit(props) {
   async function TitlePost() {
     const Titlecontent = {
       title: newTitle,
-      order : props.list.length +1
     };
     try {
       await db
@@ -34,7 +33,7 @@ function Edit(props) {
   async function TextPost() {
     const Textcontent = {
       text: text,
-      fromId :indexId
+      fromId: indexId,
     };
 
     try {

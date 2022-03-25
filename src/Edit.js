@@ -32,7 +32,7 @@ function Edit(props) {
 
   async function TextPost() {
     const Textcontent = {
-      text: text,
+      title: text,
       fromId: indexId,
     };
 

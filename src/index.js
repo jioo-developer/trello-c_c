@@ -19,6 +19,7 @@ let update = [
   {
     titleIndex: 0,
     textIndex: 0,
+    DetailBtn: false,
   },
 ];
 
@@ -56,6 +57,14 @@ function updates(state = update, action) {
     let open2 = [...update];
     open2[0].textIndex = Number(action.payload2);
     return open2;
+  } else if (action.type === "내부페이지진입") {
+    let open3 = [...update];
+    open3[0].DetailBtn = true;
+    return open3;
+  } else if (action.type === "수정완료") {
+    let close = [...update];
+    close[0].DetailBtn = false;
+    return close;
   } else {
     return state;
   }

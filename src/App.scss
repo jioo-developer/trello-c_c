@@ -4,6 +4,9 @@
   font-weight: normal;
   font-style: normal;
 }
+
+$breakpoint-mobile: "all and (max-width:1000px)";
+
 @mixin edit-template {
   .edit_area {
     display: flex;
@@ -84,6 +87,14 @@ header {
   height: 100vh;
   padding: 0 15px;
   box-sizing: border-box;
+
+  @media #{$breakpoint-mobile} {
+    flex-wrap: wrap;
+    width: 90%;
+    margin: 0 auto;
+    float: none;
+  }
+
   .list {
     display: flex;
     align-self: flex-start;
@@ -94,6 +105,11 @@ header {
     border-radius: 3px;
     margin: 0 5px;
     position: relative;
+
+    @media #{$breakpoint-mobile} {
+      margin-bottom: 30px;
+      width: 100%;
+    }
 
     .list-header {
       display: flex;

@@ -28,8 +28,9 @@ function App() {
   let [textUpdate, setTextUpdate] = useState(false);
   let [pageIndex, setPageIndex] = useState("");
   let [pageTitleIndex, setPageTitleIndex] = useState("");
-  let [pageBtn, setPageBtn] = useState(false);
+  let [fromIndex, setFromIndex] = useState("");
   let [text, setText] = useState("");
+  let [detailText, setDetailText] = useState("");
   let stateSelector = useSelector((state) => state.EditToggle);
   let stateSelector2 = useSelector((state) => state.updates);
   let dispatch = useDispatch();
@@ -88,7 +89,11 @@ function App() {
           title: updateTitle,
         })
         .then(() => {
-          document.querySelector(".title-area").value = "";
+          let dangerALL = Array.from(document.querySelectorAll(".title-area"));
+          dangerALL.map(function (a, i) {
+            dangerALL[i].value = "";
+          });
+          window.alert("제목변경이 완료되었습니다");
         });
     } catch (err) {
       throw err;
@@ -112,7 +117,7 @@ function App() {
         .collection("article")
         .doc(parameter)
         .update({
-          text: text,
+          title: text,
         })
         .then(() => {
           window.location.reload();
@@ -148,7 +153,6 @@ function App() {
                             });
                           }}
                           onChange={(e) => {
-                            console.log(updateTitle);
                             setUpdateTitle(e.target.value);
                           }}
                         />
@@ -184,8 +188,12 @@ function App() {
                                 titleUp.unshift(updateTitle);
                                 setUpdateTitle(titleUp);
 
-                                let danger =
-                                  document.querySelector(".title-area").value;
+                                let dangerALL = Array.from(
+                                  document.querySelectorAll(".title-area")
+                                );
+
+                                let danger = dangerALL[index].value;
+
                                 danger === ""
                                   ? alert("입력되지 않았습니다")
                                   : title(list[index].id);
@@ -198,17 +206,28 @@ function App() {
                       </div>
                       <div
                         className="list-body"
-                        onClick={(e) => {
+                        onClick={() => {
                           setTitleUpBtn(false);
                           setRemoveCard(false);
-                          setPageBtn(true);
-                          setPageIndex(article[index].text);
-                          setPageTitleIndex(list[index].title);
                         }}
                       >
                         {article.map(function (a, i) {
                           return list[index].id === article[i].fromId ? (
-                            <article className="card" key={i}>
+                            <article
+                              className="card"
+                              key={i}
+                              onClick={() => {
+                                dispatch({ type: "내부페이지진입" });
+                                setPageIndex(article[i].title);
+                                setPageIndex(article[i].title);
+                                setPageTitleIndex(list[index].title);
+                                setFromIndex([
+                                  article[i].fromId,
+                                  article[i].id,
+                                ]);
+                                setDetailText(article[i].text);
+                              }}
+                            >
                               {textUpdate === true ? (
                                 <ReactTextareaAutosize
                                   className="card-text"
@@ -225,16 +244,16 @@ function App() {
                                     setText(e.target.value);
                                   }}
                                 >
-                                  {article[i].text}
+                                  {article[i].title}
                                 </ReactTextareaAutosize>
                               ) : (
-                                <p>{article[i].text}</p>
+                                <p>{article[i].title}</p>
                               )}
                               <FontAwesomeIcon
                                 icon={faPencil}
                                 size="1x"
                                 onClick={() => {
-                                  setTextUpdate(true);
+                                  setTextUpdate(!textUpdate);
                                 }}
                               />
                               {i === stateSelector2[0].textIndex &&
@@ -306,11 +325,12 @@ function App() {
                   </>
                 ) : null}
               </section>
-              {pageBtn === true ? (
+              {stateSelector2[0].DetailBtn === true && textUpdate === false ? (
                 <Detail
                   page={pageIndex}
                   list={pageTitleIndex}
-                  article={article}
+                  from={fromIndex}
+                  detailText={detailText}
                 />
               ) : null}
             </main>

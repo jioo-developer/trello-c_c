@@ -71,6 +71,38 @@
       }
     }
 
+    .label-area {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .label-add {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 3px;
+        background: #ddd;
+        font-size: 25px;
+        padding-bottom: 7px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+    }
+
+    .label-area li {
+      width: 40px;
+      height: 32px;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    .label-area li:last-child {
+      margin-right: 0;
+    }
+
     .left_con {
       width: calc(100% - 230px);
       height: calc(100% - 75px);
@@ -183,6 +215,53 @@
       .btns li:hover {
         background: #333;
         color: #fff;
+      }
+    }
+    .label-detail {
+      width: 305px;
+      position: absolute;
+      top: 45px;
+      left: 0;
+      border: 1px solid #ddd;
+      padding: 15px 10px 10px 10px;
+      box-sizing: border-box;
+      background: #fff;
+      .label-header {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        p {
+          color: #5e6c84;
+          width: 100%;
+          font-size: 14px;
+          font-weight: 300;
+          padding-bottom: 20px;
+          border-bottom: 1px solid #ddd;
+          box-sizing: border-box;
+        }
+
+        .label-close {
+          position: relative;
+          bottom: 10px;
+          right: 20px;
+          cursor: pointer;
+        }
+      }
+
+      ul {
+        margin-top: 20px;
+
+        .tooltip {
+          font-size: 14px;
+          padding-top: 5px;
+        }
+      }
+      ul li {
+        width: 100%;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        height: 32px;
+        cursor: pointer;
       }
     }
   }

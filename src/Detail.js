@@ -9,6 +9,7 @@ import {
   faCreditCard,
   faGear,
   faList,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { db } from "./Firebase";
@@ -16,12 +17,26 @@ function Detail(props) {
   let pageTitle = props.page;
   let pageGroup = props.list;
   let fromIndexs = props.from;
+  let labelIndex = props.label;
   let dispatch = useDispatch();
   let [checkBtn, setCheckBtn] = useState(false);
   let [title, setTtitle] = useState("");
   let [text, setText] = useState("");
   let [saveText, setSaveText] = useState(false);
+  let [label, setLabel] = useState(false);
+  let [labelList, setLabelList] = useState([]);
   let loadText = props.detailText;
+  let [newLabel, setNewLabel] = useState(false);
+  let labelColor = [
+    "#618d4f",
+    "#f2d600",
+    "#ff9f1a",
+    "#eb5a46",
+    "#c377e0",
+    "#0079bf",
+    "#ff78cb",
+    "#344563",
+  ];
 
   function SelectTextArea(e) {
     e.target.select();
@@ -48,6 +63,7 @@ function Detail(props) {
           title: title,
         })
         .then(() => {
+          window.alert("수정이 완료 되었습니다");
           window.location.reload();
         });
     } catch (err) {
@@ -65,6 +81,7 @@ function Detail(props) {
         text: text,
       })
       .then(() => {
+        window.alert("수정이 완료 되었습니다");
         window.location.reload();
       });
   }
@@ -81,6 +98,24 @@ function Detail(props) {
           window.location.reload();
         });
     }
+  }
+
+  function hoverEvent(e, argument) {
+    e.target.style.boxShadow = `-8px 0 ${argument}`;
+  }
+
+  function removeHover(e) {
+    e.target.style.boxShadow = "";
+  }
+
+  function saveLabel(argument) {
+    db.collection("title")
+      .doc(fromIndexs[0])
+      .collection("article")
+      .doc(fromIndexs[1])
+      .update({
+        label: argument,
+      });
   }
 
   return (
@@ -102,7 +137,12 @@ function Detail(props) {
               className="page-title"
               onClick={(e) => {
                 SelectTextArea(e);
+              }}
+              onFocus={() => {
                 setCheckBtn(true);
+              }}
+              onBlur={() => {
+                setCheckBtn(false);
               }}
               onChange={(e) => setTtitle(e.target.value)}
             >
@@ -125,15 +165,44 @@ function Detail(props) {
               />
             ) : null}
           </div>
-          <p
-            className="inst"
-            onClick={() => {
-              setCheckBtn(false);
-            }}
-          >
+          <p className="inst">
             in list <span>{pageGroup}</span>
           </p>
         </div>
+        <ul className="label-area">
+          {labelIndex === undefined
+            ? labelList
+                .filter((value, idx, arr) => {
+                  return arr.findIndex((item) => value === item) === idx;
+                })
+                .map(function (a, i) {
+                  return <li style={{ backgroundColor: a }}></li>;
+                })
+            : newLabel === false
+            ? labelIndex
+                .filter((value, idx, arr) => {
+                  return arr.findIndex((item) => value === item) === idx;
+                })
+                .map(function (a, i) {
+                  return <li style={{ backgroundColor: a }}></li>;
+                })
+            : labelList
+                .filter((value, idx, arr) => {
+                  return arr.findIndex((item) => value === item) === idx;
+                })
+                .map(function (a, i) {
+                  return <li style={{ backgroundColor: a }}></li>;
+                })}
+          <div
+            className="label-add"
+            onClick={() => {
+              setLabel(true);
+              setNewLabel(true);
+            }}
+          >
+            +
+          </div>
+        </ul>
         <div className="left_con">
           <article className="des_area">
             <div className="area-header">
@@ -159,6 +228,9 @@ function Detail(props) {
                   onChange={(e) => {
                     setText(e.target.value);
                   }}
+                  onBlur={() => {
+                    setSaveText(false);
+                  }}
                 >
                   {loadText}
                 </ReactTextareaAutosize>
@@ -179,20 +251,12 @@ function Detail(props) {
                   >
                     Save
                   </button>
-                  <p
-                    className="btn-close"
-                    onClick={() => {
-                      setSaveText(false);
-                    }}
-                  >
-                    close
-                  </p>
                 </div>
               </div>
             ) : (
               <ReactTextareaAutosize
                 className="description-false"
-                onClick={() => {
+                onFocus={() => {
                   setSaveText(true);
                 }}
               >
@@ -207,8 +271,13 @@ function Detail(props) {
             utility
           </p>
           <ul className="btns">
-            <li>Label</li>
-            <li>CheckList</li>
+            <li
+              onClick={() => {
+                setLabel(true);
+              }}
+            >
+              Label
+            </li>
             <li
               onClick={() => {
                 ondelete();
@@ -217,6 +286,47 @@ function Detail(props) {
               Delete
             </li>
           </ul>
+          {label === true ? (
+            <>
+              <div className="label-detail">
+                <div className="label-header">
+                  <p>Labels</p>
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    size="1x"
+                    className="label-close"
+                    onClick={() => {
+                      setLabel(false);
+                    }}
+                  />
+                </div>
+                <ul>
+                  {labelColor.map(function (a, i) {
+                    return (
+                      <li
+                        key={i}
+                        style={{ backgroundColor: a }}
+                        onMouseEnter={(e) => {
+                          hoverEvent(e, a);
+                        }}
+                        onMouseLeave={(e) => {
+                          removeHover(e);
+                        }}
+                        onClick={() => {
+                          setNewLabel(true);
+                          let copyLabel = [...labelList];
+                          copyLabel.push(a);
+                          saveLabel(copyLabel);
+                          setLabelList(copyLabel);
+                        }}
+                      />
+                    );
+                  })}
+                  <p className="tooltip">라벨을 바꾸시려면 새로 선택하세요.</p>
+                </ul>
+              </div>
+            </>
+          ) : null}
         </article>
       </article>
     </section>

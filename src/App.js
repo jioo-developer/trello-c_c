@@ -8,7 +8,7 @@ import {
   faList,
   faPencil,
   faPlus,
-  faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Edit from "./Edit";
 import Add from "./Add";
@@ -24,15 +24,17 @@ function App() {
   let [loading, setLoading] = useState(false);
   let [updateTitle, setUpdateTitle] = useState("");
   let [titleUpBtn, setTitleUpBtn] = useState(false);
-  let [removeCard, setRemoveCard] = useState(false);
   let [textUpdate, setTextUpdate] = useState(false);
   let [pageIndex, setPageIndex] = useState("");
   let [pageTitleIndex, setPageTitleIndex] = useState("");
   let [fromIndex, setFromIndex] = useState("");
   let [text, setText] = useState("");
   let [detailText, setDetailText] = useState("");
+  let [labelIndex, setLabelIndex] = useState("");
   let stateSelector = useSelector((state) => state.EditToggle);
   let stateSelector2 = useSelector((state) => state.updates);
+  let [minRow, setMinRow] = useState(1.5);
+  let [loadLabel, setLoadLabel] = useState("");
   let dispatch = useDispatch();
 
   function SelectTextArea(e) {
@@ -67,10 +69,7 @@ function App() {
             const filterArray = objArray.filter((value, idx, arr) => {
               return (
                 arr.findIndex(
-                  (item) =>
-                    item.id === value.id &&
-                    item.fromId === value.fromId &&
-                    item.text === value.text
+                  (item) => item.id === value.id && item.fromId === value.fromId
                 ) === idx
               );
             });
@@ -79,6 +78,16 @@ function App() {
         });
     });
   }, [list]);
+
+  function onDelete(argument) {
+    const ok = window.confirm("정말 삭제하시겠습니까?");
+    if (ok) {
+      db.collection("title")
+        .doc(argument.id)
+        .delete()
+        .then(() => {});
+    }
+  }
 
   async function title(argument) {
     try {
@@ -94,18 +103,10 @@ function App() {
             dangerALL[i].value = "";
           });
           window.alert("제목변경이 완료되었습니다");
+          setTitleUpBtn(false);
         });
     } catch (err) {
       throw err;
-    }
-  }
-
-  function onDelete(argument) {
-    const ok = window.confirm("정말 삭제하시겠습니까?");
-    if (ok) {
-      db.collection("title").doc(argument.id).delete();
-    } else {
-      removeCard(false);
     }
   }
 
@@ -120,12 +121,21 @@ function App() {
           title: text,
         })
         .then(() => {
+          window.alert("수정이 완료 되었습니다");
           window.location.reload();
         });
     } catch (err) {
       throw err;
     }
   }
+
+  useEffect(() => {
+    if (textUpdate) {
+      document.querySelector(".board_wrap").classList.add("black");
+    } else {
+      document.querySelector(".board_wrap").classList.remove("black");
+    }
+  }, [textUpdate]);
 
   return (
     <div className="App">
@@ -146,7 +156,6 @@ function App() {
                           placeholder={value.title}
                           onClick={(e) => {
                             SelectTextArea(e);
-                            setTitleUpBtn(true);
                             dispatch({
                               type: "타이틀수정버튼",
                               payload: e.target.id,
@@ -155,24 +164,20 @@ function App() {
                           onChange={(e) => {
                             setUpdateTitle(e.target.value);
                           }}
+                          onFocus={() => {
+                            setTitleUpBtn(true);
+                          }}
+                          onBlur={() => {
+                            setTitleUpBtn(false);
+                          }}
                         />
 
-                        {removeCard === false && titleUpBtn === false ? (
+                        {titleUpBtn === false ? (
                           <FontAwesomeIcon
                             icon={faEllipsis}
                             size="1x"
-                            onClick={() => {
-                              setRemoveCard(true);
-                            }}
-                          />
-                        ) : titleUpBtn === false ? (
-                          <FontAwesomeIcon
-                            icon={faTrashCan}
-                            size="1x"
-                            className="remove-card"
                             value={list[index].id}
                             onClick={() => {
-                              setRemoveCard(false);
                               onDelete(value);
                             }}
                           />
@@ -204,13 +209,7 @@ function App() {
                           ) : null
                         ) : null}
                       </div>
-                      <div
-                        className="list-body"
-                        onClick={() => {
-                          setTitleUpBtn(false);
-                          setRemoveCard(false);
-                        }}
-                      >
+                      <div className="list-body">
                         {article.map(function (a, i) {
                           return list[index].id === article[i].fromId ? (
                             <article
@@ -221,6 +220,7 @@ function App() {
                                 setPageIndex(article[i].title);
                                 setPageIndex(article[i].title);
                                 setPageTitleIndex(list[index].title);
+                                setLabelIndex(article[i].label);
                                 setFromIndex([
                                   article[i].fromId,
                                   article[i].id,
@@ -228,62 +228,67 @@ function App() {
                                 setDetailText(article[i].text);
                               }}
                             >
-                              {textUpdate === true ? (
-                                <ReactTextareaAutosize
-                                  className="card-text"
-                                  minRows={1.5}
-                                  id={i}
-                                  onClick={(e) => {
-                                    SelectTextArea(e);
-                                    dispatch({
-                                      type: "내용수정",
-                                      payload2: e.target.id,
-                                    });
-                                  }}
-                                  onChange={(e) => {
-                                    setText(e.target.value);
-                                  }}
-                                >
-                                  {article[i].title}
-                                </ReactTextareaAutosize>
-                              ) : (
-                                <p>{article[i].title}</p>
-                              )}
-                              <FontAwesomeIcon
-                                icon={faPencil}
-                                size="1x"
-                                onClick={() => {
-                                  setTextUpdate(!textUpdate);
+                              <ReactTextareaAutosize
+                                className={`card-text card-text${i}`}
+                                minRows={minRow}
+                                id={i}
+                                onClick={(e) => {
+                                  SelectTextArea(e);
+                                  dispatch({
+                                    type: "내용수정",
+                                    payload2: e.target.id,
+                                  });
                                 }}
-                              />
+                                onFocus={(e) => {
+                                  setTextUpdate(true);
+                                  setMinRow(3);
+                                  e.target.classList.add("margin");
+                                }}
+                                onBlur={(e) => {
+                                  setTextUpdate(false);
+                                  setMinRow(1.5);
+                                  e.target.classList.remove("margin");
+                                }}
+                                onChange={(e) => {
+                                  setText(e.target.value);
+                                }}
+                              >
+                                {article[i].title}
+                              </ReactTextareaAutosize>
+                              <FontAwesomeIcon icon={faPencil} size="1x" />
                               {i === stateSelector2[0].textIndex &&
                               textUpdate === true ? (
-                                <button
-                                  type="button"
-                                  className="save"
-                                  id={article[i].id}
-                                  onClick={(e) => {
-                                    let copyNewText = [...text];
-                                    copyNewText.unshift(text);
-                                    setText(copyNewText);
+                                <div className="update-wrap">
+                                  <button
+                                    type="button"
+                                    className="save"
+                                    id={article[i].id}
+                                    onClick={(e) => {
+                                      let copyNewText = [...text];
+                                      copyNewText.unshift(text);
+                                      setText(copyNewText);
 
-                                    let danger =
-                                      document.querySelector(
-                                        ".card-text"
-                                      ).value;
+                                      let danger =
+                                        document.querySelector(
+                                          ".card-text"
+                                        ).value;
 
-                                    danger === ""
-                                      ? alert("입력되지 않았습니다")
-                                      : textUP(list[index].id, e.target.id);
-                                  }}
-                                >
-                                  save
-                                </button>
+                                      danger === ""
+                                        ? alert("입력되지 않았습니다")
+                                        : textUP(list[index].id, e.target.id);
+                                    }}
+                                  >
+                                    save
+                                  </button>
+                                </div>
                               ) : null}
-
-                              <div className="icon_wrap">
-                                <FontAwesomeIcon icon={faList} size="1x" />
-                              </div>
+                              {textUpdate === false ? (
+                                <>
+                                  <div className="icon_wrap">
+                                    <FontAwesomeIcon icon={faList} size="1x" />
+                                  </div>
+                                </>
+                              ) : null}
                             </article>
                           ) : null;
                         })}
@@ -331,6 +336,7 @@ function App() {
                   list={pageTitleIndex}
                   from={fromIndex}
                   detailText={detailText}
+                  label={labelIndex}
                 />
               ) : null}
             </main>

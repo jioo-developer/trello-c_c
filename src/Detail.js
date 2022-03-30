@@ -141,8 +141,10 @@ function Detail(props) {
               onFocus={() => {
                 setCheckBtn(true);
               }}
-              onBlur={() => {
-                setCheckBtn(false);
+              onBlur={(e)=>{
+                if(e.target.value === ""){
+                  setCheckBtn(false)
+                }
               }}
               onChange={(e) => setTtitle(e.target.value)}
             >
@@ -176,7 +178,7 @@ function Detail(props) {
                   return arr.findIndex((item) => value === item) === idx;
                 })
                 .map(function (a, i) {
-                  return <li style={{ backgroundColor: a }}></li>;
+                  return <li style={{ backgroundColor: a }} key={i}></li>;
                 })
             : newLabel === false
             ? labelIndex
@@ -184,14 +186,14 @@ function Detail(props) {
                   return arr.findIndex((item) => value === item) === idx;
                 })
                 .map(function (a, i) {
-                  return <li style={{ backgroundColor: a }}></li>;
+                  return <li style={{ backgroundColor: a }} key={i}></li>;
                 })
             : labelList
                 .filter((value, idx, arr) => {
                   return arr.findIndex((item) => value === item) === idx;
                 })
                 .map(function (a, i) {
-                  return <li style={{ backgroundColor: a }}></li>;
+                  return <li style={{ backgroundColor: a }} key={i}></li>;
                 })}
           <div
             className="label-add"
@@ -228,9 +230,12 @@ function Detail(props) {
                   onChange={(e) => {
                     setText(e.target.value);
                   }}
-                  onBlur={() => {
-                    setSaveText(false);
-                  }}
+
+                  onBlur={(e)=>{
+                  if(e.target.value === ""){
+                    setSaveText(false)
+                  } 
+                }}
                 >
                   {loadText}
                 </ReactTextareaAutosize>
@@ -254,14 +259,14 @@ function Detail(props) {
                 </div>
               </div>
             ) : (
-              <ReactTextareaAutosize
+              <p
                 className="description-false"
-                onFocus={() => {
+                onClick={() => {
                   setSaveText(true);
                 }}
               >
                 {loadText}
-              </ReactTextareaAutosize>
+              </p>
             )}
           </article>
         </div>

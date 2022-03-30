@@ -37,6 +37,7 @@
       .in-wrap {
         display: flex;
         align-items: center;
+        margin-top: 10px;
 
         .fa-credit-card {
           color: #555;
@@ -141,6 +142,8 @@
         .description-false {
           @extend .description;
           outline: 0;
+          overflow: hidden;
+          word-wrap: break-word;
         }
 
         .btn_wrap {
@@ -175,9 +178,7 @@
       width: 180px;
       padding-left: 50px;
       flex-direction: column;
-      position: absolute;
-      top: 65px;
-      right: 25px;
+
 
       .gears {
         margin-right: 10px;

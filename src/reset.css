@@ -41,6 +41,6 @@ footer {
   overflow: hidden;
 }
 
-/* input[type="checkbox"] {
-  display: none;
-} */
+textarea::placeholder{
+  color: #333;
+}

@@ -34,7 +34,6 @@ function App() {
   let stateSelector = useSelector((state) => state.EditToggle);
   let stateSelector2 = useSelector((state) => state.updates);
   let [minRow, setMinRow] = useState(1.5);
-  let [loadLabel, setLoadLabel] = useState("");
   let dispatch = useDispatch();
 
   function SelectTextArea(e) {
@@ -85,11 +84,11 @@ function App() {
       db.collection("title")
         .doc(argument.id)
         .delete()
-        .then(() => {});
     }
   }
 
   async function title(argument) {
+    console.log(argument)
     try {
       await db
         .collection("title")
@@ -153,7 +152,6 @@ function App() {
                         <ReactTextareaAutosize
                           className="title-area"
                           id={index}
-                          placeholder={value.title}
                           onClick={(e) => {
                             SelectTextArea(e);
                             dispatch({
@@ -167,10 +165,13 @@ function App() {
                           onFocus={() => {
                             setTitleUpBtn(true);
                           }}
-                          onBlur={() => {
-                            setTitleUpBtn(false);
+                          onBlur={(e)=>{
+                            if(e.target.value === ""){
+                              setTitleUpBtn(false)
+                            }
                           }}
-                        />
+                          
+                        >{value.title}</ReactTextareaAutosize>
 
                         {titleUpBtn === false ? (
                           <FontAwesomeIcon
@@ -216,7 +217,12 @@ function App() {
                               className="card"
                               key={i}
                               onClick={() => {
-                                dispatch({ type: "내부페이지진입" });
+                                if(textUpdate === false){
+                                  const ok = window.confirm("해당페이지로 들어가시겠습니까?")
+                                  if(ok){
+                                    dispatch({ type: "내부페이지진입" });
+                                   } 
+                                }
                                 setPageIndex(article[i].title);
                                 setPageIndex(article[i].title);
                                 setPageTitleIndex(list[index].title);
@@ -228,6 +234,22 @@ function App() {
                                 setDetailText(article[i].text);
                               }}
                             >
+                              {textUpdate === false ? (
+                                <ul className="label-wrap">
+                                  {article[i].label === undefined
+                                    ? null
+                                    : article[i].label.map(function (a1, i1) {
+                                        return (
+                                          <li
+                                            style={{ backgroundColor: a1 }}
+                                            className="show-label"
+                                            key={i1}
+                                          ></li>
+                                        );
+                                      })}
+                                </ul>
+                              ) : null}
+
                               <ReactTextareaAutosize
                                 className={`card-text card-text${i}`}
                                 minRows={minRow}
@@ -244,10 +266,11 @@ function App() {
                                   setMinRow(3);
                                   e.target.classList.add("margin");
                                 }}
-                                onBlur={(e) => {
+
+                                onBlur={()=>{
                                   setTextUpdate(false);
                                   setMinRow(1.5);
-                                  e.target.classList.remove("margin");
+                                  document.querySelector(`.card-text${i}`).classList.remove("margin")
                                 }}
                                 onChange={(e) => {
                                   setText(e.target.value);
@@ -331,13 +354,13 @@ function App() {
                 ) : null}
               </section>
               {stateSelector2[0].DetailBtn === true && textUpdate === false ? (
-                <Detail
+                  <Detail
                   page={pageIndex}
                   list={pageTitleIndex}
                   from={fromIndex}
                   detailText={detailText}
                   label={labelIndex}
-                />
+                /> 
               ) : null}
             </main>
           }

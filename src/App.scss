@@ -89,7 +89,7 @@ header {
 
   @media #{$breakpoint-mobile} {
     flex-wrap: wrap;
-    width: 90%;
+    width: 97%;
     margin: 0 auto;
     float: none;
   }
@@ -106,7 +106,7 @@ header {
     position: relative;
 
     @media #{$breakpoint-mobile} {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       width: 100%;
     }
 
@@ -243,18 +243,18 @@ header {
           }
         }
 
-        .label-wrap{
+        .label-wrap {
           display: flex;
         }
-        
-        .label-wrap li{
+
+        .label-wrap li {
           width: 40px;
           height: 8px;
           border-radius: 5px;
           margin-right: 5px;
         }
 
-        .label-wrap li:last-child{
+        .label-wrap li:last-child {
           margin-right: 0;
         }
       }
@@ -300,6 +300,10 @@ header {
     margin: 0 5px;
     order: 10000;
 
+    @media #{$breakpoint-mobile} {
+      width: 100%;
+    }
+
     @include edit-template();
 
     .edit_area {
@@ -332,6 +336,15 @@ header {
         color: #6b778c;
         position: relative;
         top: 2px;
+
+        @media #{$breakpoint-mobile} {
+          display: none;
+        }
+      }
+
+      @media #{$breakpoint-mobile} {
+        justify-content: center;
+        width: 100%;
       }
     }
 
